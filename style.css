@@ -26,6 +26,9 @@
     z-index:100;
     box-shadow: 0 .5rem 1.5rem rgba(0,0,0,.1);
   }
+  .web-title{
+    color: #FFFFFF;
+  }
   ul {
   list-style-type: none;
   margin: 0;
@@ -39,6 +42,9 @@
     float: left;
     margin-right: 3px;
     /* background-color: #179f9f; */
+  }
+  a{
+    text-decoration: none;
   }
   a:hover{
     cursor: pointer;
@@ -161,7 +167,7 @@
     padding: 6px 15px 5px 15px;
     margin-left: 10px;
     border-radius: 5px;
-    border: #eaf1eb 2px solid;
+    border: #4b4b4b 2px solid;
     text-align: center;
     font-size:19px; 
     font-weight: 600; 
@@ -170,8 +176,10 @@
 
   .select-chart:hover{
     cursor: pointer;
-    outline: #d1dad8 2px solid;
-    background: #f9fcf6;
+    outline: #ecf1f0 2px solid;
+    border: #ecf1f0 2px solid;
+    background: #719eff;
+    color: white;
     transition: 0.5;
   }
 
@@ -192,19 +200,24 @@
   .chart-tool__select{
     border-radius: 2px;
     padding: 5px 15px 3px 20px;
-    border: #a1a7ab 1.8px solid;
+    border: #7e8284 1.5px solid;
     font-size: 15px;
-    color: #62766d;
+    color: #454f4b;
     font-weight: 550;
     appearance: none;
 
   }
+
   .chart-tool__select:focus{
     outline: 1.8px solid #b5bdb9;
   }
   .chart-tool__select:hover{
-  
     cursor: pointer;
+    outline: #ecf1f0 2px solid;
+    border: #ecf1f0 2px solid;
+    background: #719eff;
+    color: white;
+    transition: 0.5;
   }
   
   .chart-tool__input{

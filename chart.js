@@ -1,10 +1,10 @@
-
 const API_GET_DATA ="https://get-data-iot.vercel.app/get-data-3";
 const API_GET_NEWEST_RECORD = "https://get-data-iot.vercel.app/get-newest-record";
 const API_GET_WATER_DATA = "https://get-data-iot.vercel.app/get-data-water-volumn";
 const API_GET_NEWEST_WATER_RECORD = "https://get-data-iot.vercel.app/get-newest-record-water";
 
-const maxPoints = 20; // tối đa điểm hiển thị trên chart
+const maxPoints = 200; // tối đa điểm hiển thị trên chart
+const stepLabel = 50;
 const waterMaxPoints = 5;
 const chartDataConfigs = {};
 let currentChartConfig = null;
@@ -58,30 +58,29 @@ document.addEventListener("DOMContentLoaded", async() => {
 
     const mainCtx = document.getElementById("mainChart");
     currentChartConfig = chartDataConfigs.temp;
-    currentChart = initLineChart(mainCtx, "Nhiệt độ (°C)",currentChartConfig, maxPoints);
+    currentChart = initLineChart(mainCtx, "Nhiệt độ (°C)",currentChartConfig, maxPoints,40);
         
     const tempCtx = document.getElementById("tempChart");
-    initLineChart(tempCtx, "Nhiệt độ (°C)", chartDataConfigs.temp, maxPoints);
+    initLineChart(tempCtx, "Nhiệt độ (°C)", chartDataConfigs.temp, maxPoints, stepLabel);
 
     const airHumCtx = document.getElementById("airHumChart");
-    initLineChart(airHumCtx, "Độ ẩm không khí (%)", chartDataConfigs.airHum, maxPoints);
+    initLineChart(airHumCtx, "Độ ẩm không khí (%)", chartDataConfigs.airHum, maxPoints,stepLabel);
 
     const soilHumCtx = document.getElementById("soilHumChart");
-    initLineChart(soilHumCtx, "Độ ẩm đất (%)",chartDataConfigs.soilHum, maxPoints);
+    initLineChart(soilHumCtx, "Độ ẩm đất (%)",chartDataConfigs.soilHum, maxPoints, stepLabel);
 
     const lightCtx = document.getElementById("lightChart");
-    initLineChart(lightCtx, "Ánh sáng (LUX)", chartDataConfigs.light, maxPoints);
+    initLineChart(lightCtx, "Ánh sáng (LUX)", chartDataConfigs.light, maxPoints, stepLabel);
     
     const waterCtx = document.getElementById("waterChart");
     initColumnChart(waterCtx,"Lượng nước tưới (ml)",waterDataConfig, waterMaxPoints);
     
 });
 
-function initColumnChart(context, lineLabel="Chart", dataConfig, maxPoints){
+function initColumnChart(context, lineLabel="Chart", dataConfig, maxPoints,stepLabel=2){
     if(context == null) return;
     const ctx = context.getContext("2d");
     const { labels, labelUnit, values, valueUnit } = dataConfig;
-    const step = 2;
     const chartData  ={
         labels: labels,
         datasets:[{
@@ -106,7 +105,7 @@ function initColumnChart(context, lineLabel="Chart", dataConfig, maxPoints){
                 ticks: {
                     // minRotation: 40, //chỉnh độ nghiên của label
                     callback: function(value, index, ticks) {
-                        return (index % step === 0)? this.getLabelForValue(value) : '';
+                        return (index % stepLabel === 0)? this.getLabelForValue(value) : '';
                     }
                 }
             },
@@ -144,17 +143,16 @@ function initColumnChart(context, lineLabel="Chart", dataConfig, maxPoints){
 
             console.log("ML: "+waterData);
             console.log("Time:  "+waterTimeData);
-            // if(timeData === chartData.labels[chartData.label.length -1]) return;
+            // if(formattedTimes2(waterTimeData) === chartData.labels[chartData.label.length -1]) return;
             addChartData(chartData, chartInstance, formattedTimes2(waterTimeData), parseFloat(waterData), maxPoints );
-        }, 10000);
+        }, 5*1000);
     }
 }
 
-function initLineChart(context, columnLabel, dataConfig, maxPoints){
+function initLineChart(context, columnLabel, dataConfig, maxPoints, stepLabel=5){
     if(context == null) return;
     const ctx = context.getContext("2d");
     const  {labels, labelUnit, values, valueUnit} =  dataConfig;
-    const step = 5;
     const chartData = {
         labels: labels,// [] nếu rỗng
         datasets: [{
@@ -186,7 +184,7 @@ function initLineChart(context, columnLabel, dataConfig, maxPoints){
                 maxRotation: 0,
                 autoSkip: false,
                 callback: function(value, index, ticks) {
-                    return (index % step === 0) ? this.getLabelForValue(value) : '';
+                    return (index % stepLabel === 0) ? this.getLabelForValue(value) : '';
                     // const label = this.getLabelForValue(value);
                     // const shortLabel = label.length > 15 ? label.slice(0, 15) + "..." : label;
                     // return (index % step === 0) ? shortLabel : '';
@@ -244,9 +242,9 @@ function initLineChart(context, columnLabel, dataConfig, maxPoints){
                     value = lightData;
                     break; 
             }
-            // if(timeData === chartData.labels[chartData.label.length -1]) return;
+            // if(formattedTimes3(timeData) === chartData.labels[chartData.label.length -1]) return;
             addChartData(chartData, chartInstance, formattedTimes3(timeData), value, maxPoints );
-        }, 10000);
+        }, 5*1000);
     }
     return lineChart;
 }
