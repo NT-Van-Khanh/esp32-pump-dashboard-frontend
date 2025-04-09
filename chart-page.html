@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Hệ thống tưới cây | Biểu đồ</title>
+    <link  href="style.css" rel="stylesheet"></link>
+  </head>
+  <body>
+    <header>
+      <div>
+        <h1><a>Hệ thống tưới cây</a></h1>
+      </div>
+      <div>
+        <ul>
+          <li><a>Trang chủ</a></li>
+          <li><a>Biểu đồ</a></li>
+        </ul>
+      </div>
+    </header>
+    <div class="multi-chart-dashboard">
+        <div class="multi-chart-dashboard__tool">
+
+                <label class="chart-tool__label">Thanh điều chỉnh</label>
+                <div class="chart-tool__item">
+                    <label for="chart-format" >Xem theo:</label>
+                    <select id="chart-format"  class="chart-tool__select">
+                        <option value="time" selected>Giờ</option>
+                        <option value="day">Ngày</option>
+                        <option value="month">Tháng</option>
+                    </select>
+                    <label  for="time-start">Từ:</label>
+                    <input type="text"  id="time-start" value="12:00" class="chart-tool__input">
+                    <label for="time-end"> Đến: </label>
+                    <input type="text" id="time-end" value="15:00" class="chart-tool__input">
+                </div>
+        </div >
+        <div class="multi-chart-dashboard__chart"> 
+            <div class="dashboard__column">
+                <div class="multi-chart">
+                    <h2 class="pump-info__title">Điều khiển máy bơm</h2>
+                    <div class="pump-info__item">
+                        <label class="pump-info__label">Lượng nước tưới: </label>
+                        <span class="pump-info__value"> -- ml/giây</span>
+                      </div>  
+                      <div class="pump-info__item">
+                        <span class="pump-info__value"></span>
+                      </div>
+                      <div class="pump-info__item">
+                        <label class="pump-info__label">Điện áp: </label>
+                        <span class="pump-info__value">--</span>
+                      </div > 
+                      <div class="pump-info__item">
+                        <label class="pump-info__label">Dòng điện: </label>
+                        <span class="pump-info__value">--mA - --A</span>
+                      </div> 
+                      <div class="pump-info__item">
+                        <label class="pump-info__label">Tổng giờ hoạt động: </label>
+                        <span class="pump-info__value">-- (giờ)</span>
+                      </div> 
+                      <div class="pump-info__item">
+                        <label class="pump-info__label"> Bật/tắt máy bơm: </label>
+                        <label class="switch">
+                          <input type="checkbox" checked class="pump-status__checkbox" id="cbPumpStatus">
+                          <span class="slider"></span>
+                        </label>
+                        <span class="pump-status__text">Đang bật</span>
+                      </div>
+                </div>
+                <div class="multi-chart">
+                    <h2 class="multi-chart__title">Biểu đồ lượng nước tưới</h2>
+                    <canvas id="waterChart" style="width:100%;max-width:100%" class="chart-wrapper__canvas" ></canvas>
+                </div>  
+
+            </div>
+            <div class="dashboard__column">
+                <div class="multi-chart">
+                    <h2 class="multi-chart__title">Biểu đồ nhiệt độ</h2>
+                    <canvas id="tempChart" style="width:100%;max-width:100%" class="chart-wrapper__canvas" ></canvas>
+                </div>
+                <div class="multi-chart">
+                    <h2 class="multi-chart__title">Biểu đồ ánh sáng</h2>
+                    <canvas id="lightChart" style="width:100%;max-width:100%" class="chart-wrapper__canvas" ></canvas>
+                </div>  
+            </div>
+
+            <div class="dashboard__column">
+                <div class="multi-chart">
+                    <h2 class="multi-chart__title">Biểu đồ độ ẩm không khí</h2>
+                    <canvas id="airHumChart" style="width:100%;max-width:100%" class="chart-wrapper__canvas" ></canvas>
+                </div>  
+                <div class="multi-chart">
+                    <h2 class="multi-chart__title">Biểu đồ độ ẩm đất</h2>
+                    <canvas id="soilHumChart" style="width:100%;max-width:100%" class="chart-wrapper__canvas" ></canvas>
+                </div>
+                <!-- <div class="multi-chart">
+                    <h2 class="multi-chart__title">Biểu đồ lượng nước tưới</h2>
+                    <canvas id="waterChart" style="width:100%;max-width:100%" class="chart-wrapper__canvas" ></canvas>
+                </div> -->
+            </div>
+        </div>
+    
+        
+    </div>  
+    <footer></footer>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="chart.js"></script>
+    </body>
+</html>

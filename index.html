@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Hệ thống tưới cây | Trang chủ</title>
+    <link  href="style.css" rel="stylesheet"></link>
+  </head>
+  <body>
+    <header>
+      <div>
+        <h1><a>Hệ thống tưới cây</a></h1>
+      </div>
+      <div>
+        <ul>
+          <li><a>Trang chủ</a></li>
+          <li><a>Biểu đồ</a></li>
+        </ul>
+      </div>
+    </header>
+    <div class="dashboard">
+      <div class="dashboard__left">
+        <div class="pump-info">
+          <h2 class="pump-info__title">Thông số máy bơm nước</h2>
+          <div class="pump-info__item">
+            <label class="pump-info__label">Lượng nước tưới: </label>
+            <span class="pump-info__value"> -- ml/giây</span>
+          </div>  
+          <div class="pump-info__item">
+            <span class="pump-info__value"></span>
+          </div>
+          <div class="pump-info__item">
+            <label class="pump-info__label">Điện áp: </label>
+            <span class="pump-info__value">--</span>
+          </div > 
+          <div class="pump-info__item">
+            <label class="pump-info__label">Dòng điện: </label>
+            <span class="pump-info__value">--mA - --A</span>
+          </div> 
+          <div class="pump-info__item">
+            <label class="pump-info__label">Tổng giờ hoạt động: </label>
+            <span class="pump-info__value">-- (giờ)</span>
+          </div> 
+          <div class="pump-info__item">
+            <label class="pump-info__label"> Bật/tắt máy bơm: </label>
+            <label class="switch">
+              <input type="checkbox" checked class="pump-status__checkbox" id="cbPumpStatus" onchange="chagePumpSatus()">
+              <span class="slider"></span>
+            </label>
+            <span class="pump-status__text" id="txtPumStatus">Đang bật</span>
+          </div>
+        </div>
+
+        <div class="water-chart">
+          <h2 class="water-chart__title">Biểu đồ lượng nước tưới</h2>
+          <canvas id="waterChart" style="width:100%;max-width:100%" class="chart-wrapper__canvas" ></canvas>
+        </div>
+
+      </div>
+      <div class="dashboard__right">
+          <div class="dashboard__right-title">
+            <h1 class="">Biểu đồ: </h1>
+            <select id="selectChart" class="select-chart" onchange="changeChartType()">
+              <option value="temp" selected>Nhiệt độ</option>
+              <option value="airHum">Độ ẩm không khí</option>
+              <option value="soilHum">Độ ẩm đất</option>
+              <option value="light">Ánh sáng</option>
+            </select>
+          </div> 
+
+
+          <div class="chart-tool">
+            <label class="chart-tool__label">Thanh điều chỉnh:</label>
+            <div class="chart-tool__item"> 
+              <label  for="time-start">Từ:</label>
+              <input type="text"  id="time-start" value="-- :00" class="chart-tool__input">
+              <span> - </span>
+              <input type="text" id="time-end" value="-- :00" class="chart-tool__input">
+              <span class="time-unit">(giờ)</span>
+            </div>
+            <div class="chart-tool__item">
+              <label for="chart-format" >Xem theo:</label>
+              <select id="chart-format"  class="chart-tool__select">
+                <option value="time" selected>Giờ</option>
+                <option value="day">Ngày</option>
+                <option value="month">Tháng</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="main-chart-wrapper"> 
+            <canvas id="mainChart" style="width:100%;max-width:100%"class="water-chart-wrapper__canvas" ></canvas>
+          </div>
+
+          <p id="currentTime" class="dashboard__time"></p>
+      </div>
+      
+    </div>
+    <footer></footer>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="chart.js"></script>
+    <script>
+      // const date = new Date();
+      // const now = new Date().toLocaleString('vi-VN', {
+      //       hour:'2-digit',
+      //       minute: '2-digit',
+      //       day: '2-digit',
+      //       month: '2-digit',
+      //       year: '4-digit'
+      //     });
+      // const timeNow = document.getElementById("currentTime");
+      // timeNow.textContent=now;
+      // console.log(formatter.format(date));
+    </script>
+  
+    </body>
+</html>
