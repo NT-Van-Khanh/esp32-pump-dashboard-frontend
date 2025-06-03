@@ -4,11 +4,13 @@ const API_GET_WATER_DATA = "https://get-data-iot.vercel.app/get-data-water-volum
 const API_GET_NEWEST_WATER_RECORD = "https://get-data-iot.vercel.app/get-newest-record-water";
 
 const maxPoints = 200; // tối đa điểm hiển thị trên chart
-const stepLabel = 50;
+const amountOfLabelsMainChart = 8;// số label hiện ở biểu đồ 0
+const amountOfLabels = 4; // số label hiện ở biểu đồ con
 const waterMaxPoints = 5;
 const chartDataConfigs = {};
 let currentChartConfig = null;
 let currentChart = null;
+
 document.addEventListener("DOMContentLoaded", async() => {
     const dataFromAPI = await getDataFromAPI(API_GET_DATA);
     const { 
@@ -58,19 +60,19 @@ document.addEventListener("DOMContentLoaded", async() => {
 
     const mainCtx = document.getElementById("mainChart");
     currentChartConfig = chartDataConfigs.temp;
-    currentChart = initLineChart(mainCtx, "Nhiệt độ (°C)",currentChartConfig, maxPoints,40);
+    currentChart = initLineChart(mainCtx, "Nhiệt độ (°C)",currentChartConfig, maxPoints, amountOfLabelsMainChart);
         
     const tempCtx = document.getElementById("tempChart");
-    initLineChart(tempCtx, "Nhiệt độ (°C)", chartDataConfigs.temp, maxPoints, stepLabel);
+    initLineChart(tempCtx, "Nhiệt độ (°C)", chartDataConfigs.temp, maxPoints, amountOfLabels);
 
     const airHumCtx = document.getElementById("airHumChart");
-    initLineChart(airHumCtx, "Độ ẩm không khí (%)", chartDataConfigs.airHum, maxPoints,stepLabel);
+    initLineChart(airHumCtx, "Độ ẩm không khí (%)", chartDataConfigs.airHum, maxPoints, amountOfLabels);
 
     const soilHumCtx = document.getElementById("soilHumChart");
-    initLineChart(soilHumCtx, "Độ ẩm đất (%)",chartDataConfigs.soilHum, maxPoints, stepLabel);
+    initLineChart(soilHumCtx, "Độ ẩm đất (%)",chartDataConfigs.soilHum, maxPoints, amountOfLabels);
 
     const lightCtx = document.getElementById("lightChart");
-    initLineChart(lightCtx, "Ánh sáng (LUX)", chartDataConfigs.light, maxPoints, stepLabel);
+    initLineChart(lightCtx, "Ánh sáng (LUX)", chartDataConfigs.light, maxPoints, amountOfLabels);
     
     const waterCtx = document.getElementById("waterChart");
     initColumnChart(waterCtx,"Lượng nước tưới (ml)",waterDataConfig, waterMaxPoints);
@@ -149,10 +151,13 @@ function initColumnChart(context, lineLabel="Chart", dataConfig, maxPoints,stepL
     }
 }
 
-function initLineChart(context, columnLabel, dataConfig, maxPoints, stepLabel=5){
+function initLineChart(context, columnLabel, dataConfig, maxPoints, amountOfLabel = 5){
+
     if(context == null) return;
     const ctx = context.getContext("2d");
     const  {labels, labelUnit, values, valueUnit} =  dataConfig;
+    const amountOfValues = values.length;
+    const stepLabel = amountOfValues / amountOfLabel;
     const chartData = {
         labels: labels,// [] nếu rỗng
         datasets: [{
@@ -177,7 +182,8 @@ function initLineChart(context, columnLabel, dataConfig, maxPoints, stepLabel=5)
         x: {
             title: {
             display: true,
-            text: labelUnit
+            text: "Thời gian ("+labels[0] +")"
+            // text: labelUnit
             },
             ticks: {
                 minRotation: 0,
@@ -207,10 +213,10 @@ function initLineChart(context, columnLabel, dataConfig, maxPoints, stepLabel=5)
         options: chartOptions
     });
     let isFallbackStarted = false;
-    safeStartFakeData();
+    safeStartData();
     
 
-    function safeStartFakeData() {
+    function safeStartData() {
         if (!isFallbackStarted) {
             isFallbackStarted = true;
             startDataInterval(chartData, lineChart, maxPoints, API_GET_NEWEST_RECORD, tyleData="TEMP");
@@ -282,6 +288,7 @@ function changeChartType() {
     const selectedValue = document.getElementById("selectChart").value;
     initLineChartWrapper(selectedValue);
 }
+
 function initLineChartWrapper(type) {
     if (currentChart) {
         if (currentChart._intervalId) {
@@ -298,17 +305,9 @@ function initLineChartWrapper(type) {
         light: "Ánh sáng (lux)"
     }[type];
     const mainCtx = document.getElementById("mainChart");
-    currentChart = initLineChart(mainCtx, title, dataConfig, maxPoints);
+    currentChart = initLineChart(mainCtx, title, dataConfig, maxPoints, amountOfLabelsMainChart);
 }
-function chagePumpSatus(){
-    const txtPumpStatus = document.getElementById('txtPumStatus');
-    const cbPumpStatus = document.getElementById('cbPumpStatus');
-    if (cbPumpStatus.checked){
-        txtPumpStatus.textContent = "Đang bật";
-    }else{
-        txtPumpStatus.textContent = "Đang tắt";
-    }
-}
+
 function formattedTimes1(timeString){
     return new Date(timeString).toLocaleString("vi-VN", {
         hour: "2-digit",
@@ -330,7 +329,19 @@ function formattedTimes2(timeString){
 };
 
 function formattedTimes3(timeString){
-    return new Date(timeString).toLocaleString("vi-VN", {
+    var dateObj;
+
+    const regex = /^\d{2}:\d{2}:\d{2} \d{1,2}\/\d{1,2}\/\d{4}$/;
+    if (regex.test(timeString)) {
+        const [time, date] = timeString.split(" ");
+        const [day, month, year] = date.split("/").map(s => s.padStart(2, "0"));
+        const isoString = `${year}-${month}-${day}T${time}`;
+        dateObj = new Date(isoString);
+    }else{
+        dateObj  = new Date(timeString);
+    }
+    
+    return dateObj.toLocaleString("vi-VN", {
         hour: "2-digit",
         minute: "2-digit",
         second: "2-digit",

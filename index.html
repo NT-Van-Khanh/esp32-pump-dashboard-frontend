@@ -8,7 +8,7 @@
   <body>
     <header>
       <div>
-        <h1 ><a href="/" class="web-title">Hệ thống tưới cây</a></h1>
+        <h1><a href="/" class="web-title">Hệ thống tưới cây</a></h1>
       </div>
       <div>
         <ul>
@@ -21,10 +21,10 @@
       <div class="dashboard__left">
         <div class="pump-info">
           <h2 class="pump-info__title">Thông số máy bơm nước</h2>
-          <div class="pump-info__item">
+          <!-- <div class="pump-info__item">
             <label class="pump-info__label">Lượng nước tưới: </label>
             <span class="pump-info__value"> -- ml/giây</span>
-          </div>  
+          </div>   -->
           <div class="pump-info__item">
             <span class="pump-info__value"></span>
           </div>
@@ -37,16 +37,30 @@
             <span class="pump-info__value">--mA - --A</span>
           </div> 
           <div class="pump-info__item">
-            <label class="pump-info__label">Tổng giờ hoạt động: </label>
-            <span class="pump-info__value">-- (giờ)</span>
+            <label class="pump-info__label">Tổng diện tích tưới: </label>
+            <span class="pump-info__land_area" id ="txtLandArea">2</span>
+            <span class="pump-info__land_area_unit" id = "txtLandAreaUnit">m^2</span>
+            <button type="button" class="chart-info_button" id="buttonChangeLandArea">Thay đổi</button>
           </div> 
+          <div id="landAreaForm" style="display: none; margin-top: 10px;">
+              <input type="number" id="inputLandArea" placeholder="Nhập diện tích đất (m²)" min="0" style="padding: 5px;" />
+              <button type="button" class="chart-info_button" id="submitLandArea">Gửi</button>
+          </div>
           <div class="pump-info__item">
             <label class="pump-info__label"> Bật/tắt máy bơm: </label>
             <label class="switch">
-              <input type="checkbox" checked class="pump-status__checkbox" id="cbPumpStatus" onchange="chagePumpSatus()">
+              <input type="checkbox" checked class="pump-status__checkbox" id="cbPumpStatus">
               <span class="slider"></span>
             </label>
             <span class="pump-status__text" id="txtPumStatus">Đang bật</span>
+          </div>
+          <div class="pump-info__item">
+            <label class="pump-info__label"> Tưới nước: </label>
+            <label class="switch">
+              <input type="checkbox" disabled class="pump-status__checkbo" id="cbWateringStatus">
+              <span class="slider"></span>
+            </label>
+            <span class="pump-status__text" id="txtWateringStatus">Đang không tưới nước</span>
           </div>
         </div>
 
@@ -95,10 +109,14 @@
       </div>
       
     </div>
+    <div id="loadingOverlay">
+      <div class="spinner"></div>
+    </div>
     <footer></footer>
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script> -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="chart.js"></script>
+    <script src="pump-control.js"></script>
     <script>
       // const date = new Date();
       // const now = new Date().toLocaleString('vi-VN', {

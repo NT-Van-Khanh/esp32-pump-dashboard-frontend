@@ -32,6 +32,7 @@
                     <input type="text"  id="time-start" value="12:00" class="chart-tool__input">
                     <label for="time-end"> Đến: </label>
                     <input type="text" id="time-end" value="15:00" class="chart-tool__input">
+                    <button type="button" class="chart-tool__button" id="button-fliter">Lọc</button>
                 </div>
         </div >
         <div class="multi-chart-dashboard__chart"> 
@@ -63,7 +64,15 @@
                           <input type="checkbox" checked class="pump-status__checkbox" id="cbPumpStatus">
                           <span class="slider"></span>
                         </label>
-                        <span class="pump-status__text">Đang bật</span>
+                        <span class="pump-status__text" id="txtPumStatus">Đang bật</span>
+                      </div>
+                      <div class="pump-info__item">
+                        <label class="pump-info__label"> Tưới nước: </label>
+                        <label class="switch">
+                          <input type="checkbox" disabled class="pump-status__checkbo" id="cbWateringStatus">
+                          <span class="slider"></span>
+                        </label>
+                        <span class="pump-status__text" id="txtWateringStatus">Đang không tưới nước</span>
                       </div>
                 </div>
                 <div class="multi-chart">
@@ -98,11 +107,13 @@
                 </div> -->
             </div>
         </div>
-    
-        
     </div>  
+    <div id="loadingOverlay">
+      <div class="spinner"></div>
+    </div>
     <footer></footer>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="chart.js"></script>
+    <script src="pump-control.js"></script>
     </body>
 </html>
