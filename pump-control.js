@@ -1,10 +1,14 @@
-const API_GET_PUMP_STATUS = "http://192.168.90.106/pump/control/get-status";
-const API_PUMP_CONTROL_ON= "http://192.168.90.106/pump/control/on";    
-const API_PUMP_CONTROL_OFF= "http://192.168.90.106/pump/control/off"; 
+const DOMAIN_PUMP ="http://192.168.90.106";
 
-const API_GET_WATERING_STATUS = "http://192.168.90.106/pump/watering/get-status";
-const API_PUMP_WATERING_ON= "http://192.168.90.106/pump/watering/on";    
-const API_PUMP_WATERING_OFF= "http://192.168.90.106/pump/watering/off"; 
+const API_GET_PUMP_STATUS = DOMAIN_PUMP + "/pump/control/get-status";
+const API_PUMP_CONTROL_ON= DOMAIN_PUMP + "/pump/control/on";    
+const API_PUMP_CONTROL_OFF= DOMAIN_PUMP+ "/pump/control/off"; 
+
+const API_GET_WATERING_STATUS = DOMAIN_PUMP + "/pump/watering/get-status";
+const API_PUMP_WATERING_ON= DOMAIN_PUMP + "/pump/watering/on";    
+const API_PUMP_WATERING_OFF= DOMAIN_PUMP+ "/pump/watering/off"; 
+
+var API_SET_SQUARE_AREA= "/set-square-area"; 
 
 const cbPumpStatus = document.getElementById("cbPumpStatus");
 const txtPumpStatus = document.getElementById('txtPumStatus');
@@ -37,10 +41,10 @@ async function fetchGetPumpStatus() {
       const res = await fetch(API_GET_PUMP_STATUS);
       const status = await res.text(); 
 
-      const isOn = status.trim().toLowerCase() === "on";
+      const isOn = status.trim().toUpperCase() === "PUMP_IS_ON";
       cbPumpStatus.checked = isOn;
       txtPumpStatus.textContent = isOn ? "Đang bật" : "Đang tắt";
-      cbWateringStatus.disabled = !isChecked;
+      cbWateringStatus.disabled = !isOn;
     } catch (error) {
       console.error("Không thể lấy trạng thái máy bơm:", error);
       cbWateringStatus.disabled = true;
@@ -81,7 +85,7 @@ async function fetchGetWateringStatus() {
       const res = await fetch(API_GET_WATERING_STATUS);
       const status = await res.text(); 
 
-      const isOn = status.trim().toLowerCase() === "on";
+      const isOn = status.trim().toLowerCase() === "IS_WATERING";
       cbWateringStatus.checked = isOn;
       txtWateringStatus.textContent = isOn ? "Đang bật" : "Đang tắt";
     } catch (error) {
@@ -149,15 +153,11 @@ submitLandArea.addEventListener("click", async () => {
   }
 
   try {
-    const res = await fetch("/api/change-land-area", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ landArea: Number(area) })
+    const res = await fetch(`${API_SET_SQUARE_AREA}?square=${Number(area)}`, {
+      method: "GET"
     });
-
-    const data = await res.json();
+    const resultText = await res.text();
+    console.log("Phản hồi từ server:", resultText); 
     alert("Cập nhật thành công!");
     landAreaForm.style.display = "none"; // Ẩn form sau khi gửi thành công
     inputLandArea.value = ""; // Reset input
