@@ -1,4 +1,4 @@
-const DOMAIN_PUMP ="http://192.168.23.131";
+const DOMAIN_PUMP ="http://10.251.1.103";
 
 const API_GET_PUMP_STATUS = DOMAIN_PUMP + "/pump/control/get-status";
 const API_PUMP_CONTROL_ON= DOMAIN_PUMP + "/pump/control/on";    
@@ -8,7 +8,7 @@ const API_GET_WATERING_STATUS = DOMAIN_PUMP + "/pump/watering/get-status";
 const API_PUMP_WATERING_ON= DOMAIN_PUMP + "/pump/watering/on";    
 const API_PUMP_WATERING_OFF= DOMAIN_PUMP+ "/pump/watering/off"; 
 
-var API_SET_SQUARE_AREA= "/set-square-area"; 
+var API_SET_SQUARE_AREA= DOMAIN_PUMP + "/set-square-area"; 
 
 const cbPumpStatus = document.getElementById("cbPumpStatus");
 const txtPumpStatus = document.getElementById('txtPumStatus');
@@ -137,7 +137,7 @@ buttonChangeLandArea.addEventListener("click", () => {
     landAreaForm.style.display = "none"; //ẩn form
     buttonChangeIsChecked = false;
   }else{
-    buttonChangeLandArea.textContent ="Hủy thay đổi";
+    buttonChangeLandArea.textContent ="Hủy";
     landAreaForm.style.display = "block"; // Hiện form
     buttonChangeIsChecked = true;
   }
@@ -146,7 +146,7 @@ buttonChangeLandArea.addEventListener("click", () => {
 
 submitLandArea.addEventListener("click", async () => {
   const area = inputLandArea.value.trim();
-
+  const txtLandArea = document.getElementById("txtLandArea");
   if (!area || isNaN(area) || Number(area) <= 0) {
     alert("Vui lòng nhập diện tích hợp lệ!");
     return;
@@ -154,13 +154,21 @@ submitLandArea.addEventListener("click", async () => {
 
   try {
     const res = await fetch(`${API_SET_SQUARE_AREA}?square=${Number(area)}`, {
-      method: "GET"
-    });
+      method: "GET"});
+
+    if (!res.ok) {
+      throw new Error(`Server trả về mã lỗi: ${res.status}`);
+    }
+    
     const resultText = await res.text();
     console.log("Phản hồi từ server:", resultText); 
+    
     alert("Cập nhật thành công!");
+    buttonChangeLandArea.textContent ="Thay đổi";
+    buttonChangeIsChecked = false;
     landAreaForm.style.display = "none"; // Ẩn form sau khi gửi thành công
     inputLandArea.value = ""; // Reset input
+    txtLandArea.textContent = Number(area);
   } catch (err) {
     console.error("Lỗi gửi API:", err);
     alert("Đã xảy ra lỗi khi cập nhật diện tích!");
