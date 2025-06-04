@@ -1,4 +1,4 @@
-const DOMAIN_PUMP ="http://192.168.90.106";
+const DOMAIN_PUMP ="http://192.168.23.131";
 
 const API_GET_PUMP_STATUS = DOMAIN_PUMP + "/pump/control/get-status";
 const API_PUMP_CONTROL_ON= DOMAIN_PUMP + "/pump/control/on";    

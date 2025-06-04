@@ -157,7 +157,7 @@ function initLineChart(context, columnLabel, dataConfig, maxPoints, amountOfLabe
     if(context == null) return;
     const ctx = context.getContext("2d");
     const  {labels, labelUnit, values, valueUnit} =  dataConfig;
-    const amountOfValues = values.length;
+    const amountOfValues = values.slice(-maxPoints).length;
     const stepLabel =  Math.floor(amountOfValues / amountOfLabel);
     const chartData = {
         labels: labels.slice(-maxPoints),// [] nếu rỗng
