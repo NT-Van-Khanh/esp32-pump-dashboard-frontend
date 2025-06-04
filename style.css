@@ -1,7 +1,7 @@
 :root {
     --header-height: 65px;
     --header-color: #008080;
-    --chart-tool-height: 30px;
+    --chart-tool-height: 48px;
     --dashboard-right_title-height: 46px;
     --multi-chart-tool-height:45px;
 
@@ -187,9 +187,9 @@
     font-family: inherit;
     display: inline-block;
     width: 10em;
-    height: 2.1em;
-    line-height: 2.1em;
-    position: relative;
+    height: 2em;
+    line-height: 2em;
+    position: relachart-tooltive;
     cursor: pointer;
     overflow: hidden;
     outline: 2px solid var(--color);
@@ -219,9 +219,13 @@
     align-items: center;
     display: flex;
     justify-content: space-between;
-    padding: 0 20px;
+    padding: 00 20px;
     box-sizing: border-box;
     align-items: center;
+  }
+  .chart-tool__label{
+    font-weight: 600;
+    color: #6f757b;
   }
   .chart-tool__item{
     color: #4f5854;
@@ -343,15 +347,15 @@
     transition: all 1s;
 }
   .chart-tool__input{
-    width: 100px;
-    padding: 0;
-    border-radius: 6px;
+    width: 210px;
+    border-radius: 5px;
     text-align: center;
     padding: 6px 0 3px 0;
     border: #a1a7ab 1.5px solid;
     font-size: 15px;
     color: #4e635a;
     font-weight: 600;
+    margin-right: 10px;
   }
   .chart-tool__input:focus{
     outline: 1.8px solid #b5bdb9;
@@ -495,8 +499,8 @@
     border: 8px solid #f3f3f3;
     border-top: 8px solid #3498db;
     border-radius: 50%;
-    width: 50px;
-    height: 50px;
+    width: 36px;
+    height: 36px;
     animation: spin 1s linear infinite;
   }
 

@@ -21,7 +21,19 @@
         <div class="multi-chart-dashboard__tool">
 
                 <label class="chart-tool__label">Thanh điều chỉnh</label>
-                <div class="chart-tool__item">
+                <!-- <div class="chart-tool__item"> 
+                    <label  for="time-start">Từ:</label>
+                    <input type="datetime-local" disabled id="timeStart" class="chart-tool__input">
+                    <span> - </span>
+                    <input type="datetime-local" disabled id="timeEnd"  class="chart-tool__input">
+                    <span class="time-unit">(ngày, giờ)</span>
+                </div> -->
+            <div class="chart-tool__item"> 
+                <label  for="time-start">Số lượng dữ liệu:</label>
+                <input type="number" id="maxPointsInput" min="10" disabled max="10000" value="200" class="chart-tool__input" style="width: 100px;">
+                <button type="button" class="chart-tool__select" disabled id="button-fliter">Lọc</button>
+            </div>
+                <!-- <div class="chart-tool__item">
                     <label for="chart-format" >Xem theo:</label>
                     <select id="chart-format"  class="chart-tool__select">
                         <option value="time" selected>Giờ</option>
@@ -33,7 +45,7 @@
                     <label for="time-end"> Đến: </label>
                     <input type="text" id="time-end" value="15:00" class="chart-tool__input">
                     <button type="button" class="chart-tool__button" id="button-fliter">Lọc</button>
-                </div>
+                </div> -->
         </div >
         <div class="multi-chart-dashboard__chart"> 
             <div class="dashboard__column">

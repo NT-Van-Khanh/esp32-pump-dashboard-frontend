@@ -3,7 +3,8 @@ const API_GET_NEWEST_RECORD = "https://get-data-iot.vercel.app/get-newest-record
 const API_GET_WATER_DATA = "https://get-data-iot.vercel.app/get-data-water-volumn";
 const API_GET_NEWEST_WATER_RECORD = "https://get-data-iot.vercel.app/get-newest-record-water";
 
-const maxPoints = 200; // tối đa điểm hiển thị trên chart
+const DELAY_CALL = 10;
+var maxPoints = 200; // tối đa điểm hiển thị trên chart
 const amountOfLabelsMainChart = 8;// số label hiện ở biểu đồ 0
 const amountOfLabels = 4; // số label hiện ở biểu đồ con
 const waterMaxPoints = 5;
@@ -27,27 +28,27 @@ document.addEventListener("DOMContentLoaded", async() => {
         time: waterTimeData } = waterDataFromAPI;
 
     chartDataConfigs.temp ={
-        labels: timeData.slice(-maxPoints).map(formattedTimes3),
+        labels: timeData.map(formattedTimes3),
         labelUnit: "Thời gian (10 phút)",
-        values: tempData.slice(-maxPoints),
+        values: tempData,
         valueUnit:"°C"
     };
     chartDataConfigs.airHum = {
-        labels: timeData.slice(-maxPoints).map(formattedTimes3),
+        labels: timeData.map(formattedTimes3),
         labelUnit: "Thời gian (10 phút)",
-        values: airHumData.slice(-maxPoints),
+        values: airHumData,
         valueUnit:"%"
     };
     chartDataConfigs.soilHum = {
-        labels: timeData.slice(-maxPoints).map(formattedTimes3),
+        labels: timeData.map(formattedTimes3),
         labelUnit: "Thời gian (10 phút)",
-        values: soilHumData.slice(-maxPoints),
+        values: soilHumData,
         valueUnit:"%"
     };
     chartDataConfigs.light = {
-        labels: timeData.slice(-maxPoints).map(formattedTimes3),
+        labels: timeData.map(formattedTimes3),
         labelUnit: "Thời gian (10 phút)",
-        values: lightData.slice(-maxPoints),
+        values: lightData,
         valueUnit:"LUX"
     };
 
@@ -143,11 +144,11 @@ function initColumnChart(context, lineLabel="Chart", dataConfig, maxPoints,stepL
                 createAt: waterTimeData
             } = await getDataFromAPI(url);
 
-            console.log("ML: "+waterData);
-            console.log("Time:  "+waterTimeData);
-            // if(formattedTimes2(waterTimeData) === chartData.labels[chartData.label.length -1]) return;
+            // console.log("ML: "+waterData);
+            // console.log("Time:  "+waterTimeData);
+            if(formattedTimes2(waterTimeData) === chartData.labels[chartData.labels.length -1]) return;
             addChartData(chartData, chartInstance, formattedTimes2(waterTimeData), parseFloat(waterData), maxPoints );
-        }, 5*1000);
+        }, DELAY_CALL*1000);
     }
 }
 
@@ -157,12 +158,12 @@ function initLineChart(context, columnLabel, dataConfig, maxPoints, amountOfLabe
     const ctx = context.getContext("2d");
     const  {labels, labelUnit, values, valueUnit} =  dataConfig;
     const amountOfValues = values.length;
-    const stepLabel = amountOfValues / amountOfLabel;
+    const stepLabel =  Math.floor(amountOfValues / amountOfLabel);
     const chartData = {
-        labels: labels,// [] nếu rỗng
+        labels: labels.slice(-maxPoints),// [] nếu rỗng
         datasets: [{
             label: columnLabel,
-            data: values,// [] nếu rỗng
+            data: values.slice(-maxPoints),// [] nếu rỗng
             fill: false,
             tension: 0.3,
             borderColor: "rgb(75, 192, 192)",
@@ -182,7 +183,7 @@ function initLineChart(context, columnLabel, dataConfig, maxPoints, amountOfLabe
         x: {
             title: {
             display: true,
-            text: "Thời gian ("+labels[0] +")"
+            text: "Thời gian (Từ "+labels[0] +")"
             // text: labelUnit
             },
             ticks: {
@@ -191,10 +192,6 @@ function initLineChart(context, columnLabel, dataConfig, maxPoints, amountOfLabe
                 autoSkip: false,
                 callback: function(value, index, ticks) {
                     return (index % stepLabel === 0) ? this.getLabelForValue(value) : '';
-                    // const label = this.getLabelForValue(value);
-                    // const shortLabel = label.length > 15 ? label.slice(0, 15) + "..." : label;
-                    // return (index % step === 0) ? shortLabel : '';
-
                 }
             }
         },
@@ -215,10 +212,9 @@ function initLineChart(context, columnLabel, dataConfig, maxPoints, amountOfLabe
     let isFallbackStarted = false;
     safeStartData();
     
-
     function safeStartData() {
         if (!isFallbackStarted) {
-            isFallbackStarted = true;
+            isFallbackStarted = true;    
             startDataInterval(chartData, lineChart, maxPoints, API_GET_NEWEST_RECORD, tyleData="TEMP");
             // startFakeFloatDataInterval(27, 5, chartData, lineChart, maxPoints);
         }
@@ -248,9 +244,9 @@ function initLineChart(context, columnLabel, dataConfig, maxPoints, amountOfLabe
                     value = lightData;
                     break; 
             }
-            // if(formattedTimes3(timeData) === chartData.labels[chartData.label.length -1]) return;
+            if(formattedTimes3(timeData) === chartData.labels[chartData.labels.length -1]) return;
             addChartData(chartData, chartInstance, formattedTimes3(timeData), value, maxPoints );
-        }, 5*1000);
+        }, DELAY_CALL*1000);
     }
     return lineChart;
 }
@@ -350,6 +346,31 @@ function formattedTimes3(timeString){
     });
 };
 
+ document.getElementById('button-fliter').addEventListener('click', () => {
+    const newVal = parseInt(document.getElementById('maxPointsInput').value);
+    const selectedChart = document.getElementById("selectChart").value;
+
+    if (!isNaN(newVal ) && newVal  > 0 && newVal  <= 10000) {
+        maxPoints = newVal;
+        if (currentChart) {
+            if (currentChart._intervalId) {
+                clearInterval(currentChart._intervalId);
+            }
+            currentChart.destroy(); // Xóa biểu đồ cũ nếu có
+        }
+        const dataConfig = chartDataConfigs[selectedChart]; // Lấy dữ liệu mới từ chartConfigs
+        const title = {
+            temp: "Nhiệt độ (°C)",
+            airhum: "Độ ẩm không khí (%)",
+            soilHum: "Độ ẩm đất (%)",
+            light: "Ánh sáng (lux)"
+        }[selectedChart];
+        const mainCtx = document.getElementById("mainChart");
+        currentChart = initLineChart(mainCtx, title, dataConfig, maxPoints, amountOfLabelsMainChart);
+    } else {
+        alert("Vui lòng nhập số từ 1 đến 10000.");
+    }
+  });
 // function startFakeIntDataInterval(min, range, chartData, chartInstance, maxPoints) {
 //     setInterval(() => {
 //         const now = new Date().toLocaleString('vi-VN', {
